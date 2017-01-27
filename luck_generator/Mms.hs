@@ -114,7 +114,7 @@ instance PP Stmt where
 --    pp x = error $ show x
 
 stmtGen :: Gen (Maybe [Stmt])
-stmtGen = $(mkGenQ "examples/C.luck") defFlags{_maxUnroll=2} TProxy1
+stmtGen = $(mkGenQ "C.luck") defFlags{_maxUnroll=2} TProxy1
 
 runWait c = do
   p <- runCommand c
@@ -148,8 +148,7 @@ dump (t:ts) fn1 fn2 = do
                                    , PP.text "  int undef;"
                                    , PP.text "  a0(undef, 0,1);"
                                    , PP.text "}" ])
-  writeFile fn1 doc
-  writeFile fn2 (PP.render tsDoc)
+  putStrLn (PP.render tsDoc)
 
 compileAndRun :: CFlags -> IO Bool
 compileAndRun cflags@CFlags{..} = do
