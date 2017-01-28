@@ -113,11 +113,13 @@ instance PP Stmt where
           $$ pp s'
 --    pp x = error $ show x
 
-stmtGen :: Gen (Maybe [Stmt])
-stmtGen = $(mkGenQ "C.luck") defFlags{_maxUnroll=2} TProxy1
+data Fun = Fun [Stmt] deriving (Data, Show)
 
-dump :: [Stmt] -> IO ()
-dump (t:ts) = do 
+stmtGen :: Gen (Maybe Fun)
+stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
+
+dump :: Fun -> IO ()
+dump (Fun (t:ts)) = do 
   let indices = map fst $ zip [0..] ts
   let tDoc = PP.vcat [ PP.text "void a0(int var0, int var1, int var2) {"
                      , PP.nest 2 $ pp t 
