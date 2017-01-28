@@ -150,8 +150,8 @@ dump (t:ts) = do
                                    , PP.text "}" ])
   putStrLn (PP.render tsDoc)
 
-runSingleBatch :: CFlags -> IO ()
-runSingleBatch cflags@CFlags{..} = do 
+runSingleBatch :: IO ()
+runSingleBatch = do 
   (mts : _ ) <- sample' stmtGen
   case mts of 
     Just ts -> do
@@ -176,5 +176,5 @@ cFlags = CFlags { _numTries = 100
 main :: IO ()
 main = do
   cflags@CFlags{..} <- cmdArgs cFlags
-  runSingleBatch cflags
+  runSingleBatch
   putStrLn "Found!"
