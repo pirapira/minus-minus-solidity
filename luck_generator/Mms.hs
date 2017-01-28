@@ -150,21 +150,12 @@ dump (t:ts) = do
                                    , PP.text "}" ])
   putStrLn (PP.render tsDoc)
 
-compileAndRun :: CFlags -> IO ()
-compileAndRun cflags@CFlags{..} = do
-  let fn1 = _outFN ++ "1.c"
-  putStrLn "Compiling...not\n"
-
-  -- | Run and test
-  putStrLn "Running and testing outputs...\n"
-
 runSingleBatch :: CFlags -> IO ()
 runSingleBatch cflags@CFlags{..} = do 
   (mts : _ ) <- sample' stmtGen
   case mts of 
     Just ts -> do
       dump ts
-      compileAndRun cflags
     Nothing -> error "Unsuccesful generation"
 
 -- TODO: Expose Luck options?
