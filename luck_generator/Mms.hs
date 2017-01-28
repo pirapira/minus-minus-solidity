@@ -150,14 +150,6 @@ dump (t:ts) = do
                                    , PP.text "}" ])
   putStrLn (PP.render tsDoc)
 
-runSingleBatch :: IO ()
-runSingleBatch = do 
-  (mts : _ ) <- sample' stmtGen
-  case mts of 
-    Just ts -> do
-      dump ts
-    Nothing -> error "Unsuccesful generation"
-
 -- TODO: Expose Luck options?
 data CFlags = CFlags { _numTries :: !Int
                      , _timeout  :: !Double
@@ -176,5 +168,8 @@ cFlags = CFlags { _numTries = 100
 main :: IO ()
 main = do
   cflags@CFlags{..} <- cmdArgs cFlags
-  runSingleBatch
-  putStrLn "Found!"
+  (mts : _ ) <- sample' stmtGen
+  case mts of
+    Just ts -> do
+      dump ts
+    Nothing -> error "Unsuccesful generation"
