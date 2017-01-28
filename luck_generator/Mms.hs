@@ -120,7 +120,6 @@ stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
 dump :: Fun -> IO ()
 dump (Fun (t:ts)) = do 
-  let indices = map fst $ zip [0..] ts
   let tDoc = PP.vcat [ PP.text "void a0(int var0, int var1, int var2) {"
                      , PP.nest 2 $ pp t 
                      , PP.text "}" ]
@@ -132,19 +131,6 @@ dump (Fun (t:ts)) = do
                                          , PP.nest 2 $ pp t 
                                          , PP.text "}" ]
                             ) (reverse $ zip [1..] $ ts) 
---  let calls = map (\(i,_) -> PP.text "a" <> PP.int i <+> PP.text "();") (zip [0..] ts)
-  let doc = PP.render $ PP.vcat ( PP.text "#include <stdio.h>" 
-                                : (map (\(i,_) -> PP.text "extern void a" 
-                                                      <> PP.int i <> PP.text "(int x, int y, int z);"
-                                               ) (zip [1..] ts)
-                                  )
-                                ++ [ PP.text "extern void loop(); "
-                                   , PP.text "extern void empty(); " ]
-                                ++ [ tDoc 
-                                   , PP.text "int main() {"
-                                   , PP.text "  int undef;"
-                                   , PP.text "  a0(undef, 0,1);"
-                                   , PP.text "}" ])
   putStrLn (PP.render tsDoc)
 
 main :: IO ()
