@@ -116,11 +116,6 @@ instance PP Stmt where
 stmtGen :: Gen (Maybe [Stmt])
 stmtGen = $(mkGenQ "C.luck") defFlags{_maxUnroll=2} TProxy1
 
-runWait c = do
-  p <- runCommand c
-  waitForProcess p
-
-
 dump :: [Stmt] -> IO ()
 dump (t:ts) = do 
   let indices = map fst $ zip [0..] ts
@@ -150,24 +145,8 @@ dump (t:ts) = do
                                    , PP.text "}" ])
   putStrLn (PP.render tsDoc)
 
--- TODO: Expose Luck options?
-data CFlags = CFlags { _numTries :: !Int
-                     , _timeout  :: !Double
-                     , _outFN    :: String
-                     }
-             deriving (Eq, Show, Read, Typeable, Data)
-
-cFlags = CFlags { _numTries = 100 
-                            &= name "num-tries" &= help "Number of tests to run"
-                , _timeout  = 0.1
-                            &= name "timeout" &= help "Timeout per-test (s)" 
-                , _outFN    = "test"
-                            &= name "filename" &= help "Generated .c filename"
-                }
-
 main :: IO ()
 main = do
-  cflags@CFlags{..} <- cmdArgs cFlags
   (mts : _ ) <- sample' stmtGen
   case mts of
     Just ts -> do
