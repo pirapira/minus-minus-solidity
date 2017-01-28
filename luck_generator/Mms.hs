@@ -150,16 +150,15 @@ dump (t:ts) = do
                                    , PP.text "}" ])
   putStrLn (PP.render tsDoc)
 
-compileAndRun :: CFlags -> IO Bool
+compileAndRun :: CFlags -> IO ()
 compileAndRun cflags@CFlags{..} = do
   let fn1 = _outFN ++ "1.c"
   putStrLn "Compiling...not\n"
 
   -- | Run and test
   putStrLn "Running and testing outputs...\n"
-  return True
 
-runSingleBatch :: CFlags -> IO Bool
+runSingleBatch :: CFlags -> IO ()
 runSingleBatch cflags@CFlags{..} = do 
   (mts : _ ) <- sample' stmtGen
   case mts of 
@@ -186,5 +185,5 @@ cFlags = CFlags { _numTries = 100
 main :: IO ()
 main = do
   cflags@CFlags{..} <- cmdArgs cFlags
-  _ <- runSingleBatch cflags
+  runSingleBatch cflags
   putStrLn "Found!"
