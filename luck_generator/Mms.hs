@@ -186,6 +186,5 @@ cFlags = CFlags { _numTries = 100
 main :: IO ()
 main = do
   cflags@CFlags{..} <- cmdArgs cFlags
-  do
-    _ <- runSingleBatch cflags
-    putStrLn "Found!"
+  _ <- runSingleBatch cflags
+  putStrLn "Found!"
