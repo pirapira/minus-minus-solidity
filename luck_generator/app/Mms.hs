@@ -62,9 +62,6 @@ class PP a where
 instance PP Int where
     pp = PP.int
 
-ppForVar :: Int -> Doc
-ppForVar i = PP.char 'i' <> PP.int i
-
 data ContractElement =
   VariableDeclaration Int
   deriving (Data, Show)
