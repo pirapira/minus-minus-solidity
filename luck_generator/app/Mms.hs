@@ -118,12 +118,14 @@ data Fun = Fun String [Stmt] deriving (Data, Show)
 stmtGen :: Gen (Maybe Fun)
 stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
-stringGen :: Gen (Maybe Int)
+data Contract = Contract Int deriving (Data, Show)
+
+stringGen :: Gen (Maybe Contract)
 stringGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
-dump :: Fun -> IO ()
-dump (Fun _ (t:ts)) = do
-  let tDoc = pp t
+-- dump :: Fun -> IO ()
+-- dump (Fun _ (t:ts)) = do
+--  let tDoc = pp t
 --      tsDoc = PP.vcat $ PP.text "#include <stdio.h>"
 --                      : (PP.text "void loop() { while (1) { printf(\"1\"); } }")
 --                      : (PP.text "void empty() { }")
@@ -132,11 +134,11 @@ dump (Fun _ (t:ts)) = do
 --                                         , PP.nest 2 $ pp t
 --                                         , PP.text "}" ]
 --                            ) (reverse $ zip [1..] $ ts)
-  putStrLn (PP.render tDoc)
+--  putStrLn (PP.render tDoc)
 
 main :: IO ()
 main = do
   (mts : _ ) <- sample' stringGen
   case mts of
-    Just ts -> putStrLn $ show ts
+    Just (Contract ts) -> putStrLn $ show ts
     Nothing -> error "Unsuccesful generation"
