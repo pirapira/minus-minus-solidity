@@ -27,10 +27,24 @@
 data ContractElement =
   VariableDeclaration Int
 
+sig goodContractElement :: ContractElement -> Bool
+fun goodContractElement elm =
+  case elm of
+  | VariableDeclaration i -> i >= 0
+  end
+
+sig goodContractElements :: [ContractElement] -> Bool
+fun goodContractElements lst =
+  case lst of
+  | 1 % [] -> True
+  | 3 % h : t -> goodContractElement h && goodContractElements t
+  end
+
 data Contract = Contract Int [ContractElement]
 
 sig main :: Contract -> Bool
 fun main c =
   case c of
-  | Contract i _ -> i >= 0
+  | Contract i lst ->
+    i >= 0 && goodContractElements lst
   end
