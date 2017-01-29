@@ -75,7 +75,7 @@ class PP a where
     pp :: a -> Doc
 
 instance PP Int where
-    pp = PP.int 
+    pp n = PP.text "int"
 
 instance PP Exp where
     pp (Var x) = PP.text $ "var" ++ show x
@@ -83,7 +83,7 @@ instance PP Exp where
     pp (Add e1 e2) = PP.parens $ pp e1 <+> PP.char '+'  <+> pp e2
     pp (Eq e1 e2)  = PP.parens $ pp e1 <+> PP.text "==" <+> pp e2
 
-ppForVar :: Int -> Doc 
+ppForVar :: Int -> Doc
 ppForVar i = PP.char 'i' <> PP.int i
 
 instance PP Stmt where
@@ -100,9 +100,9 @@ instance PP Stmt where
     pp (FunCall (-2) [] s') = PP.text "empty();" $$ pp s'
     pp (FunCall (-1) [] s') = PP.text "loop();" $$ pp s'
     pp (FunCall fid es s') = 
-        PP.char 'a' <> PP.int fid <> PP.char '(' 
-              <> PP.hcat (intersperse (PP.char ',') (map pp es))
-              <> PP.text ");" $$ pp s'
+      PP.char 'a' <> PP.int fid <> PP.char '(' 
+        <> PP.hcat (intersperse (PP.char ',') (map pp es))
+        <> PP.text ");" $$ pp s'
     pp Empty = PP.empty
     pp (For i low high sfor s') = 
         PP.text "for (int" <+> ppForVar i <+> PP.char '=' <+> PP.int low  <> PP.char ';' 
@@ -111,27 +111,25 @@ instance PP Stmt where
           $$ PP.nest 2 (pp sfor) 
           $$ PP.text "}"
           $$ pp s'
---    pp x = error $ show x
+    -- pp x = error $ "out"
 
-data Fun = Fun [Stmt] deriving (Data, Show)
+data Fun = Fun String [Stmt] deriving (Data, Show)
 
 stmtGen :: Gen (Maybe Fun)
 stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
 dump :: Fun -> IO ()
-dump (Fun (t:ts)) = do 
-  let tDoc = PP.vcat [ PP.text "void a0(int var0, int var1, int var2) {"
-                     , PP.nest 2 $ pp t 
-                     , PP.text "}" ]
-      tsDoc = PP.vcat $ PP.text "#include <stdio.h>" 
-                      : (PP.text "void loop() { while (1) { printf(\"1\"); } }")
-                      : (PP.text "void empty() { }")
-                      : map (\(i,t) -> 
-                                 PP.vcat [ PP.text "void a" <> PP.int i <> PP.text "(int var0, int var1, int var2) {"
-                                         , PP.nest 2 $ pp t 
-                                         , PP.text "}" ]
-                            ) (reverse $ zip [1..] $ ts) 
-  putStrLn (PP.render tsDoc)
+dump (Fun _ (t:ts)) = do
+  let tDoc = pp t
+--      tsDoc = PP.vcat $ PP.text "#include <stdio.h>"
+--                      : (PP.text "void loop() { while (1) { printf(\"1\"); } }")
+--                      : (PP.text "void empty() { }")
+--                      : map (\(i,t) ->
+--                                 PP.vcat [ PP.text "void a" <> PP.int i <> PP.text "(int var0, int var1, int var2) {"
+--                                         , PP.nest 2 $ pp t
+--                                         , PP.text "}" ]
+--                            ) (reverse $ zip [1..] $ ts)
+  putStrLn (PP.render tDoc)
 
 main :: IO ()
 main = do

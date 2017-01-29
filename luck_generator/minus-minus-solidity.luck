@@ -214,12 +214,12 @@ fun goodFuns ctx ss sigs =
 sig initCtx :: Unit -> Map (Int, Int)
 fun initCtx x = Map 5 [(0, (1,2)),(1, (1,2)),(2, (1,2)),(3, (1,2)),(4, (1,2))]
 
-data Fun = Fun [Stmt]
+data Fun = Fun String [Stmt]
 
 sig main :: Fun -> Bool
 fun main ss =
     case ss of
-    | Fun ss ->
+    | Fun str ss ->
       let' (Map sz sigs) = initCtx () in
       goodFuns (Map sz sigs) ss sigs
     end
