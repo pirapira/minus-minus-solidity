@@ -56,67 +56,14 @@ import Data.Data
 import Text.PrettyPrint (Doc, (<+>), (<>), ($$))
 import qualified Text.PrettyPrint as PP
 
-data Exp = Var Int
-         | Int Int
-         | Add Exp Exp
-         | Eq Exp Exp
-           deriving (Show, Data)
-
-data Stmt = Declare Int          Stmt
-          | Asgn Int Exp         Stmt 
-          | If Exp Stmt Stmt     Stmt
-          | For Int Int Int Stmt Stmt
-          | PrintVar Int         Stmt
-          | FunCall Int [Exp]    Stmt 
-          | Empty
-            deriving (Show, Data)
-
 class PP a where 
     pp :: a -> Doc
 
 instance PP Int where
     pp = PP.int
 
-instance PP Exp where
-    pp (Var x) = PP.text $ "var" ++ show x
-    pp (Int n) = pp n
-    pp (Add e1 e2) = PP.parens $ pp e1 <+> PP.char '+'  <+> pp e2
-    pp (Eq e1 e2)  = PP.parens $ pp e1 <+> PP.text "==" <+> pp e2
-
 ppForVar :: Int -> Doc
 ppForVar i = PP.char 'i' <> PP.int i
-
-instance PP Stmt where
-    pp (Declare x s) = PP.text "int" <+> pp (Var x) <+> PP.char ';' $$ pp s
-    pp (Asgn x e s)  = pp (Var x) <+> PP.char '=' <+> pp e <+> PP.char ';' $$ pp s
-    pp (If e s1 s2 s') = PP.text "if" <+> PP.parens (pp e) <+> PP.char '{' 
-                                      $$ PP.nest 2 (pp s1)
-                                      $$ PP.char '}'
-                                      $$ PP.text "else {" 
-                                      $$ PP.nest 2 (pp s2)
-                                      $$ PP.char '}'
-                                      $$ pp s'
-    pp (PrintVar n s') = PP.text "printf(\"%d\\n\", " <+> pp (Var n) <+> PP.text ");" $$ pp s'
-    pp (FunCall (-2) [] s') = PP.text "empty();" $$ pp s'
-    pp (FunCall (-1) [] s') = PP.text "loop();" $$ pp s'
-    pp (FunCall fid es s') = 
-      PP.char 'a' <> PP.int fid <> PP.char '(' 
-        <> PP.hcat (intersperse (PP.char ',') (map pp es))
-        <> PP.text ");" $$ pp s'
-    pp Empty = PP.empty
-    pp (For i low high sfor s') = 
-        PP.text "for (int" <+> ppForVar i <+> PP.char '=' <+> PP.int low  <> PP.char ';' 
-                           <+> ppForVar i <+> PP.char '<' <+> PP.int high <> PP.char ';'
-                           <+> ppForVar i <> PP.text "++) {" 
-          $$ PP.nest 2 (pp sfor) 
-          $$ PP.text "}"
-          $$ pp s'
-    -- pp x = error $ "out"
-
-data Fun = Fun String [Stmt] deriving (Data, Show)
-
-stmtGen :: Gen (Maybe Fun)
-stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
 data ContractElement =
   VariableDeclaration Int
