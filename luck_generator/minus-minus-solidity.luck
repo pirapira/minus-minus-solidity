@@ -24,11 +24,13 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE. 
 
+data ContractElement =
+  VariableDeclaration Int
 
-data Contract = Contract Int
+data Contract = Contract Int [ContractElement]
 
 sig main :: Contract -> Bool
 fun main c =
   case c of
-  | Contract i -> i >= 0
+  | Contract i _ -> i >= 0
   end

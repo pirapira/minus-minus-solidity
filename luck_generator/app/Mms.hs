@@ -118,10 +118,14 @@ data Fun = Fun String [Stmt] deriving (Data, Show)
 stmtGen :: Gen (Maybe Fun)
 stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
-data Contract = Contract Int deriving (Data, Show)
+data ContractElement =
+  VariableDeclaration Int
+  deriving (Data, Show)
+
+data Contract = Contract Int [ContractElement] deriving (Data, Show)
 
 instance PP Contract where
-    pp (Contract i) =
+    pp (Contract i _) =
       PP.text "contract C" <> pp i <+> PP.text " {}"
 
 stringGen :: Gen (Maybe Contract)
