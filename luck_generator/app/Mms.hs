@@ -121,7 +121,8 @@ stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 data Contract = Contract Int deriving (Data, Show)
 
 instance PP Contract where
-    pp (Contract i) = pp i
+    pp (Contract i) =
+      PP.text "contract C" <> pp i <+> PP.text " {}"
 
 stringGen :: Gen (Maybe Contract)
 stringGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
