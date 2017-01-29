@@ -75,7 +75,7 @@ class PP a where
     pp :: a -> Doc
 
 instance PP Int where
-    pp n = PP.text "int"
+    pp = PP.int
 
 instance PP Exp where
     pp (Var x) = PP.text $ "var" ++ show x
@@ -120,6 +120,9 @@ stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
 data Contract = Contract Int deriving (Data, Show)
 
+instance PP Contract where
+    pp (Contract i) = pp i
+
 stringGen :: Gen (Maybe Contract)
 stringGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
@@ -140,5 +143,5 @@ main :: IO ()
 main = do
   (mts : _ ) <- sample' stringGen
   case mts of
-    Just (Contract ts) -> putStrLn $ show ts
+    Just c -> putStrLn $ PP.render $ pp c
     Nothing -> error "Unsuccesful generation"
