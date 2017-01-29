@@ -124,6 +124,9 @@ data ContractElement =
 
 data Contract = Contract Int [ContractElement] deriving (Data, Show)
 
+instance PP ContractElement where
+  pp (VariableDeclaration i) = PP.text "v"<> pp i
+
 instance PP Contract where
     pp (Contract i _) =
       PP.text "contract C" <> pp i <+> PP.text " {}"
