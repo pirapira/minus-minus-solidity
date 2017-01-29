@@ -125,11 +125,14 @@ data ContractElement =
 data Contract = Contract Int [ContractElement] deriving (Data, Show)
 
 instance PP ContractElement where
-  pp (VariableDeclaration i) = PP.text "v"<> pp i
+  pp (VariableDeclaration i) =PP.text "uint" <+>  PP.text "v" <> pp i <> PP.text ";"
+
+instance PP a => PP [a] where
+  pp lst = PP.vcat (map pp lst)
 
 instance PP Contract where
-    pp (Contract i _) =
-      PP.text "contract C" <> pp i <+> PP.text " {}"
+    pp (Contract i elements) =
+      PP.text "contract C" <> pp i <+> PP.text " {" <+> pp elements <+> PP.text "}"
 
 stringGen :: Gen (Maybe Contract)
 stringGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
