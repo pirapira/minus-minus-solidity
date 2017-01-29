@@ -118,6 +118,9 @@ data Fun = Fun String [Stmt] deriving (Data, Show)
 stmtGen :: Gen (Maybe Fun)
 stmtGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
+stringGen :: Gen (Maybe Int)
+stringGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
+
 dump :: Fun -> IO ()
 dump (Fun _ (t:ts)) = do
   let tDoc = pp t
@@ -133,8 +136,7 @@ dump (Fun _ (t:ts)) = do
 
 main :: IO ()
 main = do
-  (mts : _ ) <- sample' stmtGen
+  (mts : _ ) <- sample' stringGen
   case mts of
-    Just ts -> do
-      dump ts
+    Just ts -> putStrLn $ show ts
     Nothing -> error "Unsuccesful generation"
