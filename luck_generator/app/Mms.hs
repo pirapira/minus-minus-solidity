@@ -81,22 +81,9 @@ instance PP Contract where
 stringGen :: Gen (Maybe Contract)
 stringGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1
 
--- dump :: Fun -> IO ()
--- dump (Fun _ (t:ts)) = do
---  let tDoc = pp t
---      tsDoc = PP.vcat $ PP.text "#include <stdio.h>"
---                      : (PP.text "void loop() { while (1) { printf(\"1\"); } }")
---                      : (PP.text "void empty() { }")
---                      : map (\(i,t) ->
---                                 PP.vcat [ PP.text "void a" <> PP.int i <> PP.text "(int var0, int var1, int var2) {"
---                                         , PP.nest 2 $ pp t
---                                         , PP.text "}" ]
---                            ) (reverse $ zip [1..] $ ts)
---  putStrLn (PP.render tDoc)
-
 main :: IO ()
 main = do
   (mts : _ ) <- sample' stringGen
   case mts of
-    Just c -> putStrLn $ PP.render $ pp c
+    Just c -> putStrLn $ show c
     Nothing -> error "Unsuccesful generation"
