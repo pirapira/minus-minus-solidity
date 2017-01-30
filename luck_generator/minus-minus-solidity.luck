@@ -14,11 +14,6 @@ fun goodContractElements lst =
   | 9 % h : t -> goodContractElement h && goodContractElements t
   end
 
-data Contract = Contract [ContractElement]
-
-sig main :: Contract -> Bool
-fun main c =
-  case c of
-  | Contract lst ->
-    goodContractElements lst
-  end
+sig main :: [ContractElement] -> Bool
+fun main lst =
+  goodContractElements lst
