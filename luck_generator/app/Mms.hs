@@ -32,7 +32,7 @@ data ContractElement =
   VariableDeclaration Int
   deriving (Data, Show)
 
-data Contract = Contract Int [ContractElement] deriving (Data, Show)
+data Contract = Contract [ContractElement] deriving (Data, Show)
 
 stringGen :: Gen (Maybe Contract)
 stringGen = $(mkGenQ "minus-minus-solidity.luck") defFlags{_maxUnroll=2} TProxy1

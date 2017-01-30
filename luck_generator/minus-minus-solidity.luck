@@ -14,11 +14,11 @@ fun goodContractElements lst =
   | 9 % h : t -> goodContractElement h && goodContractElements t
   end
 
-data Contract = Contract Int [ContractElement]
+data Contract = Contract [ContractElement]
 
 sig main :: Contract -> Bool
 fun main c =
   case c of
-  | Contract i lst ->
-    i >= 0 && goodContractElements lst
+  | Contract lst ->
+    goodContractElements lst
   end
