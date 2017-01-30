@@ -11,7 +11,7 @@ sig goodContractElements :: [ContractElement] -> Bool
 fun goodContractElements lst =
   case lst of
   | 1 % [] -> True
-  | 3 % h : t -> goodContractElement h && goodContractElements t
+  | 9 % h : t -> goodContractElement h && goodContractElements t
   end
 
 data Contract = Contract Int [ContractElement]

@@ -11,8 +11,6 @@ import Control.Exception
 import System.Exit
 import System.IO
 import System.IO.Error
-import System.Posix.Signals
-import System.Process.Internals
 
 import System.Environment
 import System.Random
