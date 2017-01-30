@@ -4,27 +4,12 @@ import Control.Applicative
 import Control.Arrow hiding ((<+>))
 
 import System.IO
-import System.Directory
-import System.Process
-import Control.Concurrent
-import Control.Exception
-import System.Exit
-import System.IO
-import System.IO.Error
-
-import System.Environment
-import System.Random
-import System.Console.CmdArgs
-import System.Exit
 
 import Luck.Template
 import Test.QuickCheck
 
 import Data.Maybe
 import Data.List
-
-import System.Directory
-import System.Process
 
 import Data.Data
 
