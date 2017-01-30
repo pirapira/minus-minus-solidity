@@ -1,15 +1,8 @@
-{-# LANGUAGE TemplateHaskell, RecordWildCards, DeriveDataTypeable #-}
-import Control.Monad
-import Control.Applicative
-import Control.Arrow hiding ((<+>))
-
+{-# LANGUAGE TemplateHaskell, DeriveDataTypeable #-}
 import System.IO
 
 import Luck.Template
 import Test.QuickCheck
-
-import Data.Maybe
-import Data.List
 
 import Data.Data
 
